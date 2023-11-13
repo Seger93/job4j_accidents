@@ -1,5 +1,6 @@
 package ru.job4j.accidents.repository;
 
+import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.springframework.stereotype.Repository;
@@ -13,22 +14,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 @ThreadSafe
+@AllArgsConstructor
 public class MemoryAccidentRepository implements AccidentRepository {
-
-    private static final  MemoryAccidentRepository INS = new MemoryAccidentRepository();
 
     private final Map<Integer, Accident> accidents = new ConcurrentHashMap();
 
     private final AtomicInteger nextId = new AtomicInteger(0);
-
-    private MemoryAccidentRepository() {
-        save(new Accident(0, "Авария1", "Столкновение двух авто", "Улица Пушкина"));
-        save(new Accident(0, "Авария2", "Столкновение двух авто", "Улица Колотушкина"));
-    }
-
-    public static MemoryAccidentRepository getIns() {
-        return INS;
-    }
 
     @Override
     public Accident save(Accident accident) {
