@@ -44,13 +44,14 @@
                 </thead>
                 <tbody>
                 <tr th:each="accident: ${accidents}">
-                    <td th:text="${accident.id}"/>
+                    <td><a th:href="@{|/accident/updateAccident?id=${accident.id}|}" th:text="${accident.id}"></a></td>
                     <td><a th:text="${accident.name}" />
                     <td th:text="${accident.text}"/>
                     <td th:text="${accident.address}"/>
                 </tr>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 </div>
