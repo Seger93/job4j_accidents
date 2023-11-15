@@ -6,8 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.accidents.model.Accident;
+import ru.job4j.accidents.model.AccidentType;
 import ru.job4j.accidents.service.AccidentService;
+import ru.job4j.accidents.service.AccidentTypeService;
 
+import java.util.List;
 import java.util.Optional;
 
 @ThreadSafe
@@ -18,6 +21,8 @@ public class AccidentController {
 
     private final AccidentService accidentService;
 
+    private final AccidentTypeService accidentTypeService;
+
     @GetMapping
     public String getAll(Model model) {
         model.addAttribute("accidents", accidentService.findAll());
@@ -26,6 +31,8 @@ public class AccidentController {
 
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
+        List<AccidentType> types = (List<AccidentType>) accidentTypeService.findAll();
+        model.addAttribute("types", types);
         return "accident/createAccident";
     }
 
