@@ -42,7 +42,7 @@ public class AccidentController {
     @GetMapping("/updateAccident")
     public String update(@RequestParam("id") int id, Model model) {
         Optional<Accident> optionalAccident = accidentService.findById(id);
-        if(optionalAccident.isEmpty()) {
+        if (optionalAccident.isEmpty()) {
             model.addAttribute("message", "Не найден Id прошествия");
             return "errors/404";
         }
@@ -52,9 +52,9 @@ public class AccidentController {
 
     @PostMapping("/updateAccident")
     public String update(@ModelAttribute Accident accident) {
-       if (!accidentService.update(accident)) {
-           return "errors/404";
-       }
+        if (!accidentService.update(accident)) {
+            return "errors/404";
+        }
         return "redirect:/accident";
     }
 }
