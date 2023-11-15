@@ -6,8 +6,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.accidents.model.Accident;
+import ru.job4j.accidents.model.AccidentType;
 import ru.job4j.accidents.service.AccidentService;
+import ru.job4j.accidents.service.AccidentTypeService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @ThreadSafe
@@ -25,7 +29,7 @@ public class AccidentController {
     }
 
     @GetMapping("/createAccident")
-    public String viewCreateAccident() {
+    public String viewCreateAccident(Model model) {
         return "accident/createAccident";
     }
 
@@ -37,13 +41,20 @@ public class AccidentController {
 
     @GetMapping("/updateAccident")
     public String update(@RequestParam("id") int id, Model model) {
-        model.addAttribute("accident", accidentService.findById(id).get());
+        Optional<Accident> optionalAccident = accidentService.findById(id);
+        if(optionalAccident.isEmpty()) {
+            model.addAttribute("message", "Не найден Id прошествия");
+            return "errors/404";
+        }
+        model.addAttribute("accident", optionalAccident.get());
         return "accident/updateAccident";
     }
 
     @PostMapping("/updateAccident")
     public String update(@ModelAttribute Accident accident) {
-        accidentService.update(accident);
+       if (!accidentService.update(accident)) {
+           return "errors/404";
+       }
         return "redirect:/accident";
     }
 }
