@@ -3,23 +3,23 @@ package ru.job4j.accidents.repository;
 import org.springframework.stereotype.Repository;
 import ru.job4j.accidents.model.AccidentType;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 public class MemoryAccidentType implements AccidentTypeRepository {
 
-    private final List<AccidentType> types = new ArrayList<>();
+    private final Map<Integer, AccidentType> types = new ConcurrentHashMap<>();
 
     public MemoryAccidentType() {
-        types.add(new AccidentType(1, "Две машины"));
-        types.add(new AccidentType(2, "Машина и человек"));
-        types.add(new AccidentType(3, "Машина и велосипед"));
+        types.put(1, new AccidentType(1, "Две машины"));
+        types.put(2, new AccidentType(2, "Машина и человек"));
+        types.put(3, new AccidentType(3, "Машина и велосипед"));
     }
 
     @Override
-    public Collection<AccidentType> findAll() {
-        return types;
+    public List<AccidentType> findAll() {
+        return types.values().stream().toList();
     }
 }
