@@ -8,14 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.model.AccidentType;
 import ru.job4j.accidents.model.Rule;
-import ru.job4j.accidents.repository.MemoryAccidentType;
 import ru.job4j.accidents.service.AccidentRuleService;
 import ru.job4j.accidents.service.AccidentService;
 import ru.job4j.accidents.service.AccidentTypeService;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @ThreadSafe
 @Controller
@@ -33,22 +30,24 @@ public class AccidentController {
     public String getAll(Model model) {
         model.addAttribute("accidents", accidentService.findAll());
         List<AccidentType> types = accidentTypeService.findAll();
+        List<Rule> rules = accidentRuleService.findAll();
         model.addAttribute("types", types);
+        model.addAttribute("rules", rules);
         return "accident/list";
     }
 
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
         List<AccidentType> types = accidentTypeService.findAll();
-        List<Rule> rules = (List<Rule>) accidentRuleService.findAll();
+        List<Rule> rules = accidentRuleService.findAll();
         model.addAttribute("rules", rules);
         model.addAttribute("types", types);
         return "accident/createAccident";
     }
 
     @PostMapping("/saveAccident")
-    public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
-        String[] ids = req.getParameterValues("rIds");
+    public String save(@ModelAttribute Accident accident, @RequestParam(required = false) Set<Integer> rIds) {
+        accident.setRule(accidentRuleService.findAllById(rIds));
         accidentService.save(accident);
         return "redirect:/accident";
     }
@@ -57,7 +56,7 @@ public class AccidentController {
     public String update(@RequestParam("id") int id, Model model) {
         Optional<Accident> optionalAccident = accidentService.findById(id);
         if (optionalAccident.isEmpty()) {
-            model.addAttribute("message", "Не найден Id прошествия");
+            model.addAttribute("message", "Не найден Id происшествия");
             return "errors/404";
         }
         model.addAttribute("accident", optionalAccident.get());

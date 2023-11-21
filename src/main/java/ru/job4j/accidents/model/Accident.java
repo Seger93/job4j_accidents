@@ -2,7 +2,7 @@ package ru.job4j.accidents.model;
 
 import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -17,5 +17,5 @@ public class Accident {
     private String text;
     private String address;
     private AccidentType type;
-    private List<Rule> rule;
+    private Set<Rule> rule;
 }

@@ -13,9 +13,9 @@ public class MemoryAccidentType implements AccidentTypeRepository {
     private final Map<Integer, AccidentType> types = new ConcurrentHashMap<>();
 
     public MemoryAccidentType() {
-        types.put(1, new AccidentType(1, "Две машины"));
-        types.put(2, new AccidentType(2, "Машина и человек"));
-        types.put(3, new AccidentType(3, "Машина и велосипед"));
+        types.put(0, new AccidentType(0, "Две машины"));
+        types.put(1, new AccidentType(1, "Машина и человек"));
+        types.put(2, new AccidentType(2, "Машина и велосипед"));
     }
 
     @Override

@@ -5,16 +5,22 @@ import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Rule;
 import ru.job4j.accidents.repository.MemoryAccidentRuleRepository;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class SimpleAccidentRuleService implements AccidentRuleService {
 
-    MemoryAccidentRuleRepository memoryAccidentRuleRepository;
+   private final MemoryAccidentRuleRepository memoryAccidentRuleRepository;
 
     @Override
-    public Collection<Rule> findAll() {
+    public List<Rule> findAll() {
         return memoryAccidentRuleRepository.findAll();
+    }
+
+    @Override
+    public Set<Rule> findAllById(Set<Integer> id) {
+       return memoryAccidentRuleRepository.findAllById(id);
     }
 }
