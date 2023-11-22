@@ -2,6 +2,7 @@ package ru.job4j.accidents.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.model.Rule;
 import ru.job4j.accidents.repository.MemoryAccidentRuleRepository;
 
@@ -22,5 +23,11 @@ public class SimpleAccidentRuleService implements AccidentRuleService {
     @Override
     public Set<Rule> findAllById(Set<Integer> id) {
        return memoryAccidentRuleRepository.findAllById(id);
+    }
+
+    @Override
+    public void setRuleController(Accident accident, Set<Integer> id) {
+        Set<Rule> rules = memoryAccidentRuleRepository.findAllById(id);
+        accident.setRule(rules);
     }
 }

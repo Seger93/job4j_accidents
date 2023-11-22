@@ -52,15 +52,10 @@
                     <td th:text="${accident.address}"/>
                     <td th:text="${accident.type.name}"/>
                     <td>
-                        <span th:if="${not #lists.isEmpty(accident.rule)}">
-                        <span th:each="rule, iterStat : ${accident.rule}">
-                         <span th:text="${rule.name}"></span>
-                           <span th:if="${not iterStat.last}">, </span>
-                            </span>
-                            </span>
-                        <span th:if="${#lists.isEmpty(accident.rule)}">-</span>
+                    <span th:each="rule : ${accident.rule}">
+                     <span th:text="${rule.name}"></span>
+                        </span>
                     </td>
-                </tr>
                 </tbody>
             </table>
             </div>
