@@ -50,7 +50,7 @@
                     <td><a th:text="${accident.name}" />
                     <td th:text="${accident.text}"/>
                     <td th:text="${accident.address}"/>
-                    <td th:text="${types.get(accident.type.getId()).name}"/>
+                    <td th:text="${accident.type.name}"/>
                     <td>
                         <span th:if="${not #lists.isEmpty(accident.rule)}">
                         <span th:each="rule, iterStat : ${accident.rule}">

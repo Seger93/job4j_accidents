@@ -48,6 +48,7 @@ public class AccidentController {
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident, @RequestParam(required = false) Set<Integer> rIds) {
         accident.setRule(accidentRuleService.findAllById(rIds));
+        accidentTypeService.setTypeController(accident);
         accidentService.save(accident);
         return "redirect:/accident";
     }
