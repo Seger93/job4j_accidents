@@ -19,11 +19,4 @@ public class SimpleAccidentType implements AccidentTypeService {
     public List<AccidentType> findAll() {
         return memoryAccidentType.findAll();
     }
-
-    @Override
-    public void setTypeController(Accident accident) {
-        List<AccidentType> list = memoryAccidentType.findAll();
-        AccidentType accidentType = list.get(accident.getType().getId());
-        accident.setType(accidentType);
-    }
 }
