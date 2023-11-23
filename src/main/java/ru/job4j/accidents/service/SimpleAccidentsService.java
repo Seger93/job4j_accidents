@@ -4,30 +4,28 @@ import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Accident;
-import ru.job4j.accidents.repository.MemoryAccidentRepository;
-import ru.job4j.accidents.repository.MemoryAccidentRuleRepository;
-import ru.job4j.accidents.repository.MemoryAccidentType;
+import ru.job4j.accidents.repository.*;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @ThreadSafe
 @AllArgsConstructor
 public class SimpleAccidentsService implements AccidentService {
 
-    private final MemoryAccidentRepository accidentRepository;
+    private final SqlAccidentRepository accidentRepository;
 
-    private final MemoryAccidentType memoryAccidentType;
+    private final SqlTypeRepository memoryAccidentType;
 
-    private final MemoryAccidentRuleRepository memoryAccidentRuleRepository;
+    private final SqlRuleRepository memoryAccidentRuleRepository;
 
     @Override
     public Accident save(Accident accident, Set<Integer> id) {
         accident.setType(memoryAccidentType.findAll().get(accident.getType().getId()));
-        accident.setRule(memoryAccidentRuleRepository.findAllById(id));
+        accident.setRule(memoryAccidentRuleRepository.findAllById(id).stream().collect(Collectors.toSet()));
         return accidentRepository.save(accident);
     }
 

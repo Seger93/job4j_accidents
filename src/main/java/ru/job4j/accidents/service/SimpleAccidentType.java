@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.model.AccidentType;
 import ru.job4j.accidents.repository.MemoryAccidentType;
+import ru.job4j.accidents.repository.SqlTypeRepository;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SimpleAccidentType implements AccidentTypeService {
 
-    private final MemoryAccidentType memoryAccidentType;
+    private final SqlTypeRepository memoryAccidentType;
 
     @Override
     public List<AccidentType> findAll() {
