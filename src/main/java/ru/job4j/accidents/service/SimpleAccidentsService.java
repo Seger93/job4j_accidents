@@ -9,7 +9,9 @@ import ru.job4j.accidents.repository.MemoryAccidentRuleRepository;
 import ru.job4j.accidents.repository.MemoryAccidentType;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @ThreadSafe
@@ -23,8 +25,9 @@ public class SimpleAccidentsService implements AccidentService {
     private final MemoryAccidentRuleRepository memoryAccidentRuleRepository;
 
     @Override
-    public Accident save(Accident accident) {
+    public Accident save(Accident accident, Set<Integer> id) {
         accident.setType(memoryAccidentType.findAll().get(accident.getType().getId()));
+        accident.setRule(memoryAccidentRuleRepository.findAllById(id));
         return accidentRepository.save(accident);
     }
 

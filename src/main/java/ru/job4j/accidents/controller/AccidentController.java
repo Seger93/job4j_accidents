@@ -47,8 +47,7 @@ public class AccidentController {
 
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident, @RequestParam(required = false) Set<Integer> rIds) {
-        accidentRuleService.setRuleController(accident, rIds);
-        accidentService.save(accident);
+        accidentService.save(accident, rIds);
         return "redirect:/accident";
     }
 

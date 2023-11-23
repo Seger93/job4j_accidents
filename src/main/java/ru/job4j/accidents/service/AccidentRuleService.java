@@ -9,7 +9,4 @@ import java.util.Set;
 public interface AccidentRuleService {
     List<Rule> findAll();
 
-    Set<Rule> findAllById(Set<Integer> id);
-
-    void setRuleController(Accident accident, Set<Integer> id);
 }
