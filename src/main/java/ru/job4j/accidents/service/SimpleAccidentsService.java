@@ -24,7 +24,7 @@ public class SimpleAccidentsService implements AccidentService {
 
     @Override
     public Accident save(Accident accident, Set<Integer> id) {
-        accident.setType(memoryAccidentType.findAll().get(accident.getType().getId()));
+        accident.setType(memoryAccidentType.findById(accident.getType().getId()));
         accident.setRule(memoryAccidentRuleRepository.findAllById(id).stream().collect(Collectors.toSet()));
         return accidentRepository.save(accident);
     }

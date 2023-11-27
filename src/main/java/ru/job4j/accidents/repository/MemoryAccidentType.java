@@ -22,4 +22,9 @@ public class MemoryAccidentType implements AccidentTypeRepository {
     public List<AccidentType> findAll() {
         return types.values().stream().toList();
     }
+
+    @Override
+    public AccidentType findById(int id) {
+        return types.get(id);
+    }
 }

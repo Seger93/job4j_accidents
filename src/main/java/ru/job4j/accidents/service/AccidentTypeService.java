@@ -8,4 +8,5 @@ public interface AccidentTypeService {
 
     List<AccidentType> findAll();
 
+    AccidentType findById(int id);
 }

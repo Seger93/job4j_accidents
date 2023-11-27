@@ -6,4 +6,6 @@ import java.util.Collection;
 
 public interface AccidentTypeRepository {
     Collection<AccidentType> findAll();
+
+    AccidentType findById(int id);
 }

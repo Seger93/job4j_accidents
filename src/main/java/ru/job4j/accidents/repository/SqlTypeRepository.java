@@ -15,6 +15,14 @@ public class SqlTypeRepository implements AccidentTypeRepository {
     @Override
     public List<AccidentType> findAll() {
         String sql = "SELECT * FROM type";
-        return jdbc.query(sql, (rs, rowNum) -> new AccidentType(rs.getInt("id"), rs.getString("name")));
+        return jdbc.query(sql, (rs, rowNum) ->
+                new AccidentType(rs.getInt("id"), rs.getString("name")));
+    }
+
+    @Override
+    public AccidentType findById(int id) {
+        String sql = "SELECT * FROM type WHERE id=?";
+        return jdbc.queryForObject(sql, new Object[]{id}, (rs, rowNum) ->
+                new AccidentType(rs.getInt("id"), rs.getString("name")));
     }
 }

@@ -3,9 +3,7 @@ package ru.job4j.accidents.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.job4j.accidents.model.Accident;
 import ru.job4j.accidents.model.AccidentType;
-import ru.job4j.accidents.repository.MemoryAccidentType;
 import ru.job4j.accidents.repository.SqlTypeRepository;
 
 import java.util.List;
@@ -19,5 +17,10 @@ public class SimpleAccidentType implements AccidentTypeService {
     @Override
     public List<AccidentType> findAll() {
         return memoryAccidentType.findAll();
+    }
+
+    @Override
+    public AccidentType findById(int id) {
+        return memoryAccidentType.findById(id);
     }
 }

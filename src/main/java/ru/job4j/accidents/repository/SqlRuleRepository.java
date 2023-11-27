@@ -22,8 +22,17 @@ public class SqlRuleRepository implements AccidentRuleRepository {
 
     @Override
     public List<Rule> findAllById(Set<Integer> id) {
-        Object[] params = {id};
-        return jdbc.query("SELECT * FROM rules WHERE id IN (?)",
-                params, (rs, rowNum) -> new Rule(rs.getInt("id"), rs.getString("name")));
+        Object[] params = id.toArray();
+        StringBuilder query = new StringBuilder("SELECT * FROM rules WHERE id IN (");
+        for (int i = 0; i < params.length; i++) {
+            if (i > 0) {
+                query.append(", ");
+            }
+            query.append("?");
+        }
+        query.append(")");
+
+        return jdbc.query(query.toString(), params,
+                (rs, rowNum) -> new Rule(rs.getInt("id"), rs.getString("name")));
     }
 }
