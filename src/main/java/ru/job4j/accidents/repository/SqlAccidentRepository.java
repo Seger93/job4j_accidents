@@ -1,15 +1,17 @@
 package ru.job4j.accidents.repository;
 
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.job4j.accidents.model.Accident;
+import ru.job4j.accidents.model.AccidentType;
 import ru.job4j.accidents.model.Rule;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 @Repository
@@ -17,10 +19,6 @@ import java.util.*;
 public class SqlAccidentRepository implements AccidentRepository {
 
     private final JdbcTemplate jdbc;
-
-    private final SqlTypeRepository sqlTypeRepository;
-
-    private final SqlRuleRepository sqlRuleRepository;
 
     public Accident save(Accident accident) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -60,50 +58,79 @@ public class SqlAccidentRepository implements AccidentRepository {
                         + "SET name = ?, text = ?, address = ?, type_id = ? "
                         + "WHERE id = ?",
                 accident.getName(), accident.getText(), accident.getAddress(),
-                accident.getType().getId(), accident.getId());
+                accident.getType(), accident.getId());
         if (rowsUpdated > 0) {
             jdbc.update("DELETE FROM accident_rule WHERE accident_id = ?", accident.getId());
             insertAccidentRules(accident);
-            return true;
         }
         return false;
     }
 
     @Override
     public Optional<Accident> findById(int id) {
-        Accident accident = new Accident();
-        jdbc.query(
-                "SELECT a.id, a.name, a.text, a.address, t.id as type_id, t.name as type_name, r.id as rule_id, r.name as rule_name "
-                        + "FROM accident a "
-                        + "JOIN type t ON a.type_id = t.id "
-                        + "JOIN accident_rule ar ON a.id = ar.accident_id "
-                        + "JOIN rules r ON ar.rule_id = r.id "
-                        + "WHERE a.id = ?",
-                (rs, row) -> {
+        String sql = "SELECT a.id, a.text, a.address, t.id AS type_id, t.name AS type_name, r.id AS rule_id, r.name AS rule_name "
+                + "FROM accident a "
+                + "JOIN accident_rule ar ON a.id = ar.accident_id "
+                + "JOIN rules r ON ar.rule_id = r.id "
+                + "JOIN type t ON a.type_id = t.id "
+                + "WHERE a.id = ?";
+        Accident accident = null;
+        try (Connection connection = Objects.requireNonNull(jdbc.getDataSource()).getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    accident = new Accident();
                     accident.setId(rs.getInt("id"));
-                    accident.setName(rs.getString("name"));
-                    return Optional.of(accident);
-                });
+                    accident.setName(rs.getString("text"));
+                    accident.setAddress(rs.getString("address"));
+                    accident.setType(new AccidentType(rs.getInt("type_id"),
+                            rs.getString("type_name")));
+                    accident.setRule(new HashSet<>());
+                    Rule rule = new Rule();
+                    rule.setId(rs.getInt("rule_id"));
+                    rule.setName(rs.getString("rule_name"));
+                    accident.getRule().add(rule);
+                }
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
         return Optional.of(accident);
     }
 
     @Override
     public Collection<Accident> findAll() {
-        return jdbc.query("SELECT DISTINCT a.id, a.text, a.address, t.name AS type_name, r.name AS rule_name FROM accident a "
-                       + "JOIN accident_rule ar ON a.id = ar.accident_id "
-                       + "JOIN rules r ON ar.rule_id = r.id "
-                       + "JOIN type t ON a.type_id = t.id;",
-                (rs, row) -> {
-                    Accident accident = new Accident();
-                    accident.setId(rs.getInt("id"));
-                    accident.setName(rs.getString("text"));
-                    accident.setAddress(rs.getString("address"));
-                    accident.setType(sqlTypeRepository.findById(rs.getInt("id")));
-                    Set<Integer> set = new HashSet<>();
-                    set.add(rs.getInt("id"));
-                    Set<Rule> rulSet = new HashSet<>(sqlRuleRepository.findAllById(set));
-                    accident.setRule(rulSet);
-                    return accident;
+        return jdbc.query("SELECT DISTINCT a.id, a.name, a.text, a.address, t.id AS type_id, t.name AS type_name, "
+                        + "r.id AS rule_id, r.name AS rule_name FROM accident a "
+                        + "JOIN accident_rule ar ON a.id = ar.accident_id "
+                        + "JOIN rules r ON ar.rule_id = r.id "
+                        + "JOIN type t ON a.type_id = t.id;",
+                rs -> {
+                    Map<Integer, Accident> accidentMap = new HashMap<>();
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        Accident accident = accidentMap.get(id);
+                        if (accident == null) {
+                            accident = new Accident();
+                            accident.setId(id);
+                            accident.setName(rs.getString("name"));
+                            accident.setText(rs.getString("text"));
+                            accident.setAddress(rs.getString("address"));
+                            accident.setType(new AccidentType(rs.getInt("type_id"),
+                                    rs.getString("type_name")));
+                            accident.setRule(new HashSet<>());
+                            accidentMap.put(id, accident);
+                        }
+                        String ruleName = rs.getString("rule_name");
+                        if (ruleName != null) {
+                            Rule rule = new Rule();
+                            rule.setId(rs.getInt("rule_id"));
+                            rule.setName(ruleName);
+                            accident.getRule().add(rule);
+                        }
+                    }
+                    return accidentMap.values();
                 });
     }
 }

@@ -7,6 +7,7 @@ import ru.job4j.accidents.model.Rule;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 @AllArgsConstructor
@@ -22,17 +23,8 @@ public class SqlRuleRepository implements AccidentRuleRepository {
 
     @Override
     public List<Rule> findAllById(Set<Integer> id) {
-        Object[] params = id.toArray();
-        StringBuilder query = new StringBuilder("SELECT * FROM rules WHERE id IN (");
-        for (int i = 0; i < params.length; i++) {
-            if (i > 0) {
-                query.append(", ");
-            }
-            query.append("?");
-        }
-        query.append(")");
-
-        return jdbc.query(query.toString(), params,
-                (rs, rowNum) -> new Rule(rs.getInt("id"), rs.getString("name")));
+        String query = "SELECT * FROM rules WHERE id IN (" + id.stream().map(Object::toString).
+                collect(Collectors.joining(", ")) + ")";
+        return jdbc.query(query, (rs, rowNum) -> new Rule(rs.getInt("id"), rs.getString("name")));
     }
 }
