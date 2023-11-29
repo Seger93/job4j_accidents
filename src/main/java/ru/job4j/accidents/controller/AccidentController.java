@@ -59,12 +59,16 @@ public class AccidentController {
             return "errors/404";
         }
         model.addAttribute("accident", optionalAccident.get());
+        List<AccidentType> types = accidentTypeService.findAll();
+        List<Rule> rules = accidentRuleService.findAll();
+        model.addAttribute("rules", rules);
+        model.addAttribute("types", types);
         return "accident/updateAccident";
     }
 
     @PostMapping("/updateAccident")
-    public String update(@ModelAttribute Accident accident) {
-        if (!accidentService.update(accident)) {
+    public String update(@ModelAttribute Accident accident, @RequestParam(required = false) Set<Integer> rIds) {
+        if (!accidentService.update(accident, rIds)) {
             return "errors/404";
         }
         return "redirect:/accident";
