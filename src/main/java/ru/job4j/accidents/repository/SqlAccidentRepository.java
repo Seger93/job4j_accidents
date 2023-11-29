@@ -58,10 +58,11 @@ public class SqlAccidentRepository implements AccidentRepository {
                         + "SET name = ?, text = ?, address = ?, type_id = ? "
                         + "WHERE id = ?",
                 accident.getName(), accident.getText(), accident.getAddress(),
-                accident.getType(), accident.getId());
+                accident.getType().getId(), accident.getId());
         if (rowsUpdated > 0) {
             jdbc.update("DELETE FROM accident_rule WHERE accident_id = ?", accident.getId());
             insertAccidentRules(accident);
+            return true;
         }
         return false;
     }

@@ -26,6 +26,7 @@ public class SqlRuleRepository implements AccidentRuleRepository {
     public Set<Rule> findAllById(Set<Integer> id) {
         String query = "SELECT * FROM rules WHERE id IN (" + id.stream().map(Object::toString).
                 collect(Collectors.joining(", ")) + ")";
-        return new HashSet<>(jdbc.query(query, (rs, rowNum) -> new Rule(rs.getInt("id"), rs.getString("name"))));
+        return new HashSet<>(jdbc.query(query, (rs, rowNum) -> new Rule(rs.getInt("id"),
+                rs.getString("name"))));
     }
 }
