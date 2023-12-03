@@ -3,7 +3,7 @@ package ru.job4j.accidents.service;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Rule;
-import ru.job4j.accidents.repository.SqlRuleRepository;
+import ru.job4j.accidents.repository.RuleHibernate;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SimpleAccidentRuleService implements AccidentRuleService {
 
-   private final SqlRuleRepository memoryAccidentRuleRepository;
+   private final RuleHibernate memoryAccidentRuleRepository;
 
     @Override
     public List<Rule> findAll() {

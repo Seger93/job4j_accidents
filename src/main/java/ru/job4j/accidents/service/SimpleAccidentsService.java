@@ -9,18 +9,17 @@ import ru.job4j.accidents.repository.*;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @ThreadSafe
 @AllArgsConstructor
 public class SimpleAccidentsService implements AccidentService {
 
-    private final SqlAccidentRepository accidentRepository;
+    private final AccidentHibernate accidentRepository;
 
-    private final SqlTypeRepository memoryAccidentType;
+    private final TypeHibernate memoryAccidentType;
 
-    private final SqlRuleRepository memoryAccidentRuleRepository;
+    private final RuleHibernate memoryAccidentRuleRepository;
 
     @Override
     public Accident save(Accident accident, Set<Integer> id) {
