@@ -9,9 +9,9 @@ import java.util.Set;
 public interface AccidentService {
     Accident save(Accident accident, Set<Integer> id);
 
-    boolean deleteById(int id);
+    void deleteById(int id);
 
-    boolean update(Accident accident, Set<Integer> id);
+    Accident update(Accident accident, Set<Integer> id);
 
     Optional<Accident> findById(int id);
 

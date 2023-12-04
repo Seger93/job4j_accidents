@@ -2,42 +2,44 @@ package ru.job4j.accidents.service;
 
 import lombok.AllArgsConstructor;
 import net.jcip.annotations.ThreadSafe;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.job4j.accidents.model.Accident;
+import ru.job4j.accidents.model.AccidentType;
+import ru.job4j.accidents.model.Rule;
 import ru.job4j.accidents.repository.*;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @ThreadSafe
 @AllArgsConstructor
 public class SimpleAccidentsService implements AccidentService {
 
-    private final AccidentHibernate accidentRepository;
+    private final JPAAccidentRepository accidentRepository;
 
-    private final TypeHibernate memoryAccidentType;
+    private final JPATypeRepository memoryAccidentType;
 
-    private final RuleHibernate memoryAccidentRuleRepository;
+    private final JPARuleRepository memoryAccidentRuleRepository;
 
     @Override
     public Accident save(Accident accident, Set<Integer> id) {
-        accident.setType(memoryAccidentType.findById(accident.getType().getId()));
+        accident.setType(memoryAccidentType.findById(accident.getType().getId()).get());
         accident.setRule(memoryAccidentRuleRepository.findAllById(id));
         return accidentRepository.save(accident);
     }
 
     @Override
-    public boolean deleteById(int id) {
-        return accidentRepository.deleteById(id);
+    public void deleteById(int id) {
+        accidentRepository.deleteById(id);
     }
 
     @Override
-    public boolean update(Accident accident, Set<Integer> id) {
-        accident.setType(memoryAccidentType.findById(accident.getType().getId()));
+    public Accident update(Accident accident, Set<Integer> id) {
+        accident.setType(memoryAccidentType.findById(accident.getType().getId()).get());
         accident.setRule(memoryAccidentRuleRepository.findAllById(id));
-        return accidentRepository.update(accident);
+        return accidentRepository.save(accident);
     }
 
     @Override
@@ -47,6 +49,6 @@ public class SimpleAccidentsService implements AccidentService {
 
     @Override
     public Collection<Accident> findAll() {
-        return accidentRepository.findAll();
+        return (Collection<Accident>) accidentRepository.findAll();
     }
 }

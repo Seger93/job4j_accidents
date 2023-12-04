@@ -68,9 +68,7 @@ public class AccidentController {
 
     @PostMapping("/updateAccident")
     public String update(@ModelAttribute Accident accident, @RequestParam(required = false) Set<Integer> rIds) {
-        if (!accidentService.update(accident, rIds)) {
-            return "errors/404";
-        }
+        accidentService.update(accident, rIds);
         return "redirect:/accident";
     }
 }
