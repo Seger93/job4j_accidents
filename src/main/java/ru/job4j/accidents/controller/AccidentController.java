@@ -30,7 +30,7 @@ public class AccidentController {
     public String getAll(Model model) {
         model.addAttribute("accidents", accidentService.findAll());
         List<AccidentType> types = accidentTypeService.findAll();
-        List<Rule> rules = accidentRuleService.findAll();
+        Set<Rule> rules = accidentRuleService.findAll();
         model.addAttribute("types", types);
         model.addAttribute("rules", rules);
         return "accident/list";
@@ -39,7 +39,7 @@ public class AccidentController {
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
         List<AccidentType> types = accidentTypeService.findAll();
-        List<Rule> rules = accidentRuleService.findAll();
+        Set<Rule> rules = accidentRuleService.findAll();
         model.addAttribute("rules", rules);
         model.addAttribute("types", types);
         return "accident/createAccident";
@@ -60,7 +60,7 @@ public class AccidentController {
         }
         model.addAttribute("accident", optionalAccident.get());
         List<AccidentType> types = accidentTypeService.findAll();
-        List<Rule> rules = accidentRuleService.findAll();
+        Set<Rule> rules = accidentRuleService.findAll();
         model.addAttribute("rules", rules);
         model.addAttribute("types", types);
         return "accident/updateAccident";

@@ -9,4 +9,6 @@ import java.util.Set;
 @Repository
 public interface JPARuleRepository extends CrudRepository<Rule, Integer> {
     Set<Rule> findAllById(Iterable<Integer> ids);
+
+    Set<Rule> findAll();
 }
