@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <!--  Зависимости Bootstrap-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+          crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+            integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+            integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+            crossorigin="anonymous"></script>
+    <title>Автонарушители</title>
+</head>
+<body>
+<div class="container py-3">
+    <main class="form-reg">
+        <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
+        <form name='login' th:action="@{/reg}" method='POST'>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="username" name="username">
+                <label for="username">Имя пользователя</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" name="password">
+                <label for="password">Пароль</label>
+            </div>
+            <hr class="my-4">
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Регистрация</button>
+            <div class="col-10">
+                <a class="row-10 nav-item nav-link" th:href="@{/login}">Авторизация</a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>
