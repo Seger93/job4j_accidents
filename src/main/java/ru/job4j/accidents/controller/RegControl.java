@@ -25,7 +25,7 @@ public class RegControl {
         try {
             users.save(user);
         } catch (Exception e) {
-            model.addAttribute("message","Пользователь уже зарегистрирован");
+            model.addAttribute("message", "Пользователь уже зарегистрирован");
             return "errors/404";
         }
         return "redirect:/login";
