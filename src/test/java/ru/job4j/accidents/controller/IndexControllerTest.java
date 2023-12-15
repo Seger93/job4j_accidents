@@ -5,7 +5,9 @@ import org.mockito.Mockito;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.ui.Model;
+import ru.job4j.accidents.Main;
 import ru.job4j.accidents.service.AccidentService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +25,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
+@SpringBootTest(classes = Main.class)
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 class IndexControllerTest {
 
     @Autowired
