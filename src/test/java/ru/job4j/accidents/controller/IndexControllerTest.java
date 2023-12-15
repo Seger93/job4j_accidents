@@ -6,17 +6,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
-import ru.job4j.accidents.Main;
 import ru.job4j.accidents.service.AccidentService;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +41,7 @@ class IndexControllerTest {
         IndexController controller = new IndexController(accidentService);
         Model model = mock(Model.class);
         String view = controller.index(model);
-        assertThat(view, is("index"));
+        assertThat(view).isEqualTo("index");
         Mockito.verify(model).addAttribute("user", "testUser");
         Mockito.verify(model).addAttribute("accidents", accidentService.findAll());
     }
