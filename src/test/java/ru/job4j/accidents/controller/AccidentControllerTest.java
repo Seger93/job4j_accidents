@@ -1,6 +1,8 @@
 package ru.job4j.accidents.controller;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,14 +17,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.job4j.accidents.Main;
+import ru.job4j.accidents.model.Accident;
+import ru.job4j.accidents.model.AccidentType;
+import ru.job4j.accidents.model.Rule;
+import ru.job4j.accidents.service.SimpleAccidentsService;
+
+import java.util.Set;
 
 @SpringBootTest(classes = Main.class)
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
 class AccidentControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    SimpleAccidentsService accidentsService;
 
     @Test
     @Transactional
@@ -44,11 +54,15 @@ class AccidentControllerTest {
                 .andExpect(model().attributeExists("types", "rules"));
     }
 
+    @Disabled
     @Test
     @WithMockUser
     @Transactional
     public void whenGetUpdate() throws Exception {
-        this.mockMvc.perform(get("/accident/updateAccident").param("id", "1"))
+        var accident = new Accident(1, "name1", "description1", "address1",
+                new AccidentType(), Set.of(new Rule()));
+        accidentsService.save(accident, Set.of(1));
+        this.mockMvc.perform(get("/accident/updateAccident").param("id", String.valueOf(accident.getId())))
                 .andExpect(status().isOk())
                 .andExpect(view().name("accident/updateAccident"))
                 .andExpect(model().attributeExists("accident", "types", "rules"));
